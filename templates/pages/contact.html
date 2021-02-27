@@ -1,0 +1,22 @@
+{%extends 'layout/app.html'%}
+{%load static %}
+
+{%block body%}
+<!-- Content Wrapper. Contains page content -->
+<div class="container">
+  <div class="d-flex justify-content-around">
+    <div>
+      <img src="{% static 'dist/img/contact.jpg' %}" alt="Images">
+    </div>
+    <div>
+      <h3 class="strong">Contact Us</h3>
+      <h5 class="strong">Have any questions? We'd love to hear from you. </h5>
+      {{form.as_p}}
+      <button type='submit' class="btn btn-primary btn-block btn-flat mb-3" >Submit</button>
+    </div>
+    
+  </div>
+</div>
+
+{%endblock%}
+{% block javascript %}{% endblock %}

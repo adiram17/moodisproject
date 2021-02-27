@@ -1,0 +1,77 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moodis</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Datatable style -->
+  <link rel="stylesheet" href="{% static 'plugins/datatables/css/dataTables.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+  <!-- jQuery -->
+  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+  <!-- Bootstrap 4 -->
+  <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- ChartJS -->
+  <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+  <!-- Datatable -->
+  <script src="{% static 'plugins/datatables/js/dataTables.min.js' %}"></script>
+  <!-- AdminLTE App -->
+  <script src="{% static 'dist/js/adminlte.js' %}"></script>
+
+</head>
+
+<body class="mb-5" style="background-image: url({% static 'dist/img/bg.jpg' %});">
+  <!-- Nav Bar Header-->
+  {% include "elements/header.html" %}
+  <!-- Main Content -->
+  {% block body%}
+  {% endblock %}
+  <!-- Footer-->
+  {% include "elements/footer.html" %}
+  <!-- ./wrapper -->
+  {% block javascript %}{% endblock %}
+
+  {% for message in messages%}
+  <script>
+    $(document).Toasts('create', {
+      title: 'Message Info',
+      autohide: true,
+      delay: 5000,
+      body: '{{message}}',
+      position: 'topRight',
+
+    })
+  </script>
+  {%endfor%}
+
+  {% if form.errors %}
+    {% for field in form %}
+      {% for error in field.errors %}
+      <script>
+      $(document).Toasts('create', {
+          title: 'Error Message',
+          autohide: true,
+          delay: 5000,
+          body: '{{error}}',
+          position: 'topRight',
+
+        })
+      </script>
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+
+</body>
+
+</html>

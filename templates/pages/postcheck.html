@@ -1,0 +1,32 @@
+{%extends 'layout/app.html'%}
+{% load static %}
+
+{%block body%}
+<!-- Content Wrapper. Contains page content -->
+<div class="container">
+  <div class="d-flex flex-column">
+    <div class="text-center">
+      <h3 class="strong">Anda telah menyelesaikan pengecekan hari ini.</h3>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        # Hasil
+      </div>
+      <div class="card-body">
+        <p>Saat ini Anda sedang berada pada episode:</p>
+        <h3>{{user_mood_result.result_category}}</h3>
+        <p>Tanggal Pemeriksaan: {{user_mood_result.date}}</p>
+        <div class="text-center">
+          <a class="btn btn-primary btn-flat" href="/detail">Detail Information</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Footer-->
+{% include "elements/footer.html" %}
+{%endblock%}
+
+{% block javascript %}
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% load static %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand navbar-dark mb-5">
+  <!-- Left navbar links -->
+  <ul class="navbar-nav ml-5">
+    <li class="nav-item d-none d-sm-inline-block ">
+      <h4><a href="/" class="nav-link">Home</a></h4>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block">
+      <h4><a href="/about" class="nav-link">About</a></h4>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block">
+      <h4><a href="/contact" class="nav-link">Contact Us</a></h4>
+    </li>
+    {%if user.is_authenticated %}
+
+    {%endif%}
+  </ul>
+
+  <!-- Right navbar links -->
+  <ul class="navbar-nav ml-auto">
+    {%if user.is_authenticated %}
+    <li class="nav-item d-none d-sm-inline-block">
+      <h4><a href="#" class="nav-link"><i class="fa fa-user"> </i> {{user.profile.full_name}}</a></h4>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block ">
+      <h4><a href="#" class="nav-link" data-toggle="modal" data-target="#logoutModal">Logout</a></h4>
+    </li>
+    {%endif%}
+
+  </ul>
+</nav>
+<!-- /.navbar -->
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title" id="exampleModalLabel">Konfirmasi</p>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">Pilih "Logout" untuk keluar. "Cancel" untuk batal.</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-flat" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary btn-flat" href="/logout">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>

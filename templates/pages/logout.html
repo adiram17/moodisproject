@@ -1,0 +1,29 @@
+{%extends 'layout/app_home.html'%}
+{% load static %}
+
+{%block body%}
+<!-- Content Wrapper. Contains page content -->
+<div class="container">
+  <div class="d-flex justify-content-around">
+    <div>
+      <img src="{% static 'dist/img/home.jpg' %}" alt="Images">
+    </div>
+    <div>
+      <h1 class="strong" style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Moodis APP</h1>
+          
+      <h5 class="strong">Mood Disorder Application</h5>
+      <div class="login-box">
+        <div class="card">
+          <div class="card-body login-card-body">
+            <p class="login-box-msg">Anda telah logout.</p>
+            <a class="btn btn-primary btn-block btn-flat mb-3" href="/">Buka Halaman Login</a>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+{%endblock%}
+{% block javascript %}{% endblock %}

@@ -1,0 +1,229 @@
+{%extends 'layout/app.html'%}
+{% load static %}
+
+{%block body%}
+<!-- Content Wrapper. Contains page content -->
+<div class="container">
+    <h3 class="strong text-center mb-3">User Information Detail</h3>
+    <div class="card">
+        <div class="card-header">
+            #1 User Profile
+        </div>
+        <div class="card-body">
+            {% for field in form %}
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ field.label }}</label>
+                <div class="col-sm-10">
+                    {{ field }}
+                </div>
+            </div>
+            {% endfor %}
+            <div class="text-center">
+                <a href="/profile" class="btn btn-primary btn-flat">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            #2 Mood Graph
+        </div>
+        <div class="card-body">
+            <div class="chart">
+                <canvas id="lineChart"
+                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            #3 Mood Episode Result List
+        </div>
+        <div class="card-body">
+            <table id="userMoodResult" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Accumulative Score</th>
+                        <th>Result Category</th>
+                        <th>Result Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for user_mood_result in user_mood_results%}
+                    <tr>
+                        <td>{{user_mood_result.date}}</td>
+                        <td>{{user_mood_result.accumulative_score}}</td>
+                        <td>{{user_mood_result.result_category}}</td>
+                        <td>{{user_mood_result.result_description}}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#deleteUserMoodResultConfirmation"
+                            data-id="{{ user_mood_result.id }}" data-date="{{ user_mood_result.date }}">
+                            Delete
+                        </button>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+                
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            #4 Additional Information
+        </div>
+        <div class="card-body">
+            TBD: Akan berisi setelah user mengisi closing questionnaire
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            #5 Confirmation
+        </div>
+        <div class="card-body">
+            Apakah Anda akan melanjutkan pengecekan mood anda? Jika ya silakan menuju tombol "Continue" dan jika tidak silakan menuju tombol "Done" untuk mengakhiri pengecekan.
+            <div class="text-center">
+                <a href="/check" class="btn btn-primary btn-flat">Continue</a>
+                <a class="btn btn-primary btn-flat" data-toggle="modal" data-target="#closingQuestionaireModal">Done</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            #6 Download
+        </div>
+        <div class="card-body">
+            Silakan klik tombol "Download" untuk mengunduh.
+            <div class="text-center">
+                <a href="#" class="btn btn-primary btn-flat">Download</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Konfirmasi Closing Questionaire Modal-->
+<div class="modal fade" id="closingQuestionaireModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title" id="exampleModalLabel">Konfirmasi</p>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">Pilihan ini akan mengakhiri pengecekan episode mood secara berkala yang Anda lakukan. Proses akan dilanjutkan ke kuisioner penutup. Apakah Administrator yakin ingin melanjutkan ke sesi ini?</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-flat" type="button" data-dismiss="modal">Tidak</button>
+        <a class="btn btn-primary btn-flat" href="#">Ya</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Konfirmasi Delete User Mood Result-->
+<div class="modal fade" id="deleteUserMoodResultConfirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Record?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="contentmodal" ></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-flat" data-dismiss="modal">Tidak</button>
+                <a type="button" class="btn btn-primary btn-flat" id="deletelinkmodal" href="">Ya</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+{% block javascript %}
+<script>
+
+    var areaChartData = {
+      labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [
+        {
+          label               : 'Digital Goods',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [28, 48, 40, 19, 86, 27, 90]
+        },
+        {
+          label               : 'Electronics',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [65, 59, 80, 81, 56, 55, 40]
+        },
+      ]
+    }
+
+    
+    var areaChartOptions = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }]
+      }
+    }
+
+    var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+    var lineChartOptions = $.extend(true, {}, areaChartOptions)
+    var lineChartData = $.extend(true, {}, areaChartData)
+    lineChartData.datasets[0].fill = false;
+    lineChartData.datasets[1].fill = false;
+    lineChartOptions.datasetFill = false
+
+    var lineChart = new Chart(lineChartCanvas, {
+        type: 'line',
+        data: lineChartData,
+        options: lineChartOptions
+    })
+
+    $('#userMoodResult').DataTable({
+    });
+
+    $('#deleteUserMoodResultConfirmation').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var id = button.data('id') // Extract info from data-* attributes
+        var date = button.data('date') // Extract info from data-* attributes
+
+        var contentmodal = $(this)
+        contentmodal.find('.modal-body #contentmodal').text("Hapus data untuk tanggal "+date+"?")
+
+        var deletelinkmodal = document.getElementById('deletelinkmodal')
+        deletelinkmodal.href="/delete_user_mood_result/"+id
+
+    })
+</script>
+{% endblock %}

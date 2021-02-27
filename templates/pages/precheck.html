@@ -1,0 +1,32 @@
+{%extends 'layout/app.html'%}
+{% load static %}
+
+{%block body%}
+<!-- Content Wrapper. Contains page content -->
+<div class="container">
+  <div class="d-flex flex-column">
+    <div class="text-center">
+      <h3 class="strong">Petunjuk</h3>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>1. Bacalah tiap pernyataan dengan cermat.</p>
+        <p>2. Pilihlah pernyataan yang paling mencerminkan keadaan diri anda dan apa yang anda rasakan dalam tiga minggu
+          terakhir, termasuk hari ini.</p>
+        <p>3. Pilihlah salah satu jawaban yang tersedia dari setiap alternatif jawaban yang disediakan. </p>
+        <p>4. Tidak ada jawaban yang salah dan jangan sampai ada yang terlewati. Terimakasih.</p>
+        <div class="text-center">
+          <a class="btn btn-primary btn-flat" href="/check">Lanjutkan ke pengecekan</a>  
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+<!-- Footer-->
+{% include "elements/footer.html" %}
+{%endblock%}
+
+{% block javascript %}
+
+{% endblock %}
