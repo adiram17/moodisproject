@@ -11,8 +11,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100, null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
-    birth_date = models.DateField(null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
+    age = models.IntegerField(default=0)
     
     def __unicode__(self):
         return self.full_name
@@ -28,12 +28,29 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+class Patient(models.Model):
+    GENDER_CHOICES=[
+       ('Male', 'Male'),
+       ('Female', 'Female')
+    ]
+    created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100, null=True, blank=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
+    age = models.IntegerField(default=0)
+    is_self = models.BooleanField(default=False)
+    
+    def __unicode__(self):
+        return self.full_name
+    def __str__(self):
+        return self.full_name
+
 
 class Question(models.Model): 
     SELECTION = [
         ('Questionaire 1', 'Mood Questionaire'),
         ('Questionaire 2', 'Closing Questionaire'),
     ]
+    question_code = models.CharField(max_length=10)
     question_type = models.CharField(max_length=100, choices=SELECTION)
     question_section = models.CharField(max_length=255)
     question_number = models.IntegerField(default=0)
@@ -59,13 +76,26 @@ class ResponseOption(models.Model):
     def __str__(self):
         return str(self.score)+" "+self.text
 
-class UserMoodResult(models.Model): 
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    date = models.DateField(auto_now=True,blank=True)
-    accumulative_score = models.IntegerField(default=0)
-    result_category= models.CharField(max_length=50)
-    result_description = models.TextField(max_length=255)
+
+class PatientResponse(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer_score = models.IntegerField(default=0)
+    class Meta:
+        abstract = True
+
+class PatientMoodEpisode(models.Model): 
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    date = models.DateField(blank=True)
+    episode = models.CharField(max_length=50)
 
     class Meta:
-        verbose_name = 'User Mood Result'
-        verbose_name_plural = 'User Mood Result'
+        verbose_name = 'Patient Mood Episode'
+        verbose_name_plural = 'Patient Mood Episode'
+
+class PatientMoodResponse(PatientResponse):
+    patient_mood_episode = models.ForeignKey(PatientMoodEpisode, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Patient Mood Response'
+        verbose_name_plural = 'Patient Mood Responses'

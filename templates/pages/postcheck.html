@@ -14,17 +14,16 @@
       </div>
       <div class="card-body">
         <p>Saat ini Anda sedang berada pada episode:</p>
-        <h3>{{user_mood_result.result_category}}</h3>
-        <p>Tanggal Pemeriksaan: {{user_mood_result.date}}</p>
+        <h3>{{patient_mood_episode.episode}}</h3>
+        <p>Tanggal Pemeriksaan: {{patient_mood_episode.date}}</p>
         <div class="text-center">
-          <a class="btn btn-primary btn-flat" href="/detail">Detail Information</a>
+          <a class="btn btn-primary btn-flat" href="/patient_detail/?patient_id={{patient_id}}">Detail Information</a>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- Footer-->
-{% include "elements/footer.html" %}
+
 {%endblock%}
 
 {% block javascript %}

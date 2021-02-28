@@ -8,25 +8,28 @@ class ContactForm(forms.Form):
     message = forms.CharField(label='Message', max_length=1000, widget=forms.Textarea(attrs={'class':'form-control', 'rows'
     :'4'}))
 
-class ProfileForm(forms.Form):
+class PatientForm(forms.Form):
     GENDER_CHOICES=[
        ('Male', 'Male'),
        ('Female', 'Female')
     ]
-    username = forms.CharField(label='Username', max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'readonly':'true'}))
     full_name = forms.CharField(label='Full Name', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
-    email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control'}))
-    phone = forms.CharField(label='Phone', max_length=20, widget=forms.TextInput(attrs={'class':'form-control'}))
     gender = forms.ChoiceField(label='Gender', choices=GENDER_CHOICES, widget=forms.Select(attrs={'class':'form-control'}))
-    birth_date = forms.DateField(label='Birth Date', widget=forms.DateInput(attrs={'class':'form-control', 'placeholder':'yyyy-mm-dd'}))
+    age = forms.IntegerField(label='Age', widget=forms.NumberInput(attrs={'class':'form-control'}))
 
-class ProfileViewForm(forms.Form):
+class PatientViewForm(forms.Form):
     full_name = forms.CharField(label='Full Name', max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'readonly':'true'}))
-    email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control', 'readonly':'true'}))
-    phone = forms.CharField(label='Phone', max_length=20, widget=forms.TextInput(attrs={'class':'form-control', 'readonly':'true'}))
     gender = forms.CharField(label='Gender', widget=forms.TextInput(attrs={'class':'form-control', 'readonly':'true'}))
-    birth_date = forms.DateField(label='Birth Date', widget=forms.DateInput(attrs={'class':'form-control', 'placeholder':'yyyy-mm-dd', 'readonly':'true'}))
+    age = forms.IntegerField(label='Age', widget=forms.NumberInput(attrs={'class':'form-control', 'readonly':'true'}))
 
+class PatientCheckForm(PatientViewForm):
+    #TODO add validation no future date, only today and backdate, no duplicate date for same patient
+    date = forms.DateField(label='Exam Date (yyyy-mm-dd)', widget=forms.DateInput(attrs={'class':'form-control', 'placeholder':'yyyy-mm-dd'}))
+
+    def clean(self):
+        super(PatientCheckForm, self).clean()
+        #validation
+        return self.cleaned_data
 
 class UserCreationForm(forms.Form):
     GENDER_CHOICES=[
@@ -38,13 +41,13 @@ class UserCreationForm(forms.Form):
     email = forms.CharField(label='Email', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control'}))
     phone = forms.CharField(label='Phone', max_length=20, widget=forms.TextInput(attrs={'class':'form-control'}))
     gender = forms.ChoiceField(label='Gender', choices=GENDER_CHOICES, widget=forms.Select(attrs={'class':'form-control'}))
-    birth_date = forms.DateField(label='Birth Date', widget=forms.DateInput(attrs={'class':'form-control', 'placeholder':'yyyy-mm-dd'}))
+    age = forms.IntegerField(label='Age', widget=forms.NumberInput(attrs={'class':'form-control'}))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class':'form-control'}))
     password2 = forms.CharField(label='Password Confirmation', widget=forms.PasswordInput(attrs={'class':'form-control'}))
     
     #validation
     def clean(self):
-        
+    
         super(UserCreationForm, self).clean()
         useremail = self.cleaned_data.get('email')
         password1 = self.cleaned_data.get('password1')

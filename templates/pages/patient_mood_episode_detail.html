@@ -1,0 +1,50 @@
+{%extends 'layout/app.html'%}
+{% load static %}
+
+{%block body%}
+<!-- Content Wrapper. Contains page content -->
+<div class="container">
+    <h3 class="strong text-center mb-3">View Mood Episode Detail</h3>
+    <div class="card">
+        <div class="card-header">
+            #1 Episode
+        </div>
+        <div class="card-body">
+            <p>Tanggal Pemeriksaan: {{patient_mood_episode.date}}</p>
+            <h3>Episode: {{patient_mood_episode.episode}}</h3>
+            <div class="text-center">
+                <a class="btn btn-secondary btn-flat"
+                    href="/patient_detail/?patient_id={{patient_mood_episode.patient.id}}">Back to User Information</a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            #2 User Response
+        </div>
+        <div class="card-body">
+            <table id="" class="" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Question Code</th>
+                        <th>Question</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for patient_mood_response in patient_mood_responses%}
+                    <tr>
+                        <td>{{patient_mood_response.question.question_code}}</td>
+                        <td>{{patient_mood_response.question}}</td>                        
+                        <td>{{patient_mood_response.answer_score}}</td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+                
+            </table>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+{% block javascript %}{% endblock %}

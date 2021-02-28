@@ -9,34 +9,67 @@
       <h1 class="strong">Mood Episode Questionaire</h1>
       <p>Klasifikasi Gangguan Mood Unipolar dan Bipolar Tahap I</p>
     </div>
-    <div class="card">
-      <div class="card-header">
-        # Kuisioner Suasana Hati
+    <form class="form-horizontal" role="form" method="POST">
+      {% csrf_token %}
+      <div class="card">
+        <div class="card-header">
+          #1 Petunjuk
+        </div>
+        <div class="card-body">
+          <p>1. Bacalah tiap pernyataan dengan cermat.</p>
+          <p>2. Pilihlah pernyataan yang paling mencerminkan keadaan diri anda dan apa yang anda rasakan dalam tiga
+            minggu
+            terakhir, termasuk hari ini.</p>
+          <p>3. Pilihlah salah satu jawaban yang tersedia dari setiap alternatif jawaban yang disediakan. </p>
+          <p>4. Tidak ada jawaban yang salah dan jangan sampai ada yang terlewati. Terimakasih.</p>
+        </div>
       </div>
-      <div class="card-body">
-        <p class="mb-3">Pilihlah jawaban yang paling sesuai dengan keadaan diri Anda.</p>
-        <form class="form-horizontal" role="form" method="POST">
-          {% csrf_token %}
+      <div class="card">
+        <div class="card-header">
+          #2 Data Diri
+        </div>
+        <div class="card-body">
+          {% for field in form %}
+          <div class="form-group row">
+              <label class="col-sm-2 col-form-label">{{ field.label }}</label>
+              <div class="col-sm-10">
+                  {{ field }}
+              </div>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          #3 Kuisioner Suasana Hati
+        </div>
+        <div class="card-body">
+          <p class="mb-3">Pilihlah jawaban yang paling sesuai dengan keadaan diri Anda.</p>
+
           <!--Form question here-->
           {%for question in questions%}
-            <p class="mt-3 text-muted"><strong>{{question.question_number}}. {{question.prompt}}</strong></p>
-            {%for response_option in response_options%}
-              {%if response_option.question == question%}
-                <div class="form-check ml-5">
-                  <label class="text-muted">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault{{question.question_number}}" id="flexRadioDefault{{question.question_number}}" value={{response_option.score}} required>
-                    {{response_option.text}}
-                  </label>
-                </div>
-              {%endif%}
-            {%endfor%}
-          {%endfor%}
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-flat">Submit</button>
+          <p class="mt-3 text-muted"><strong>{{question.question_number}}. {{question.prompt}}</strong></p>
+          {%for response_option in response_options%}
+          {%if response_option.question == question%}
+          <div class="form-check ml-5">
+            <label class="text-muted">
+              <input class="form-check-input" type="radio" name="option{{question.question_number}}"
+                id="option{{question.question_number}}" value={{response_option.score}} required>
+              {{response_option.text}}
+            </label>
           </div>
-        </form>
+          {%endif%}
+          {%endfor%}
+          {%endfor%}
+
+        </div>
       </div>
-    </div>
+      <div class="text-center">
+        <a class="btn btn-secondary btn-flat" href="/precheck">Back to Precheck</a>
+        <button type="submit" class="btn btn-primary btn-flat">Submit</button>
+      </div>
+    </form>
   </div>
 </div>
 

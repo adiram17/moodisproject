@@ -1,4 +1,4 @@
-from .models import Profile, UserMoodResult
+from .models import Profile, PatientMoodEpisode
 from django.shortcuts import redirect
 from django.contrib import messages
 from datetime import datetime
@@ -12,8 +12,8 @@ def is_checked_today(function):
             #TODO add check logic
             ischecked = False
             user_profile = Profile.objects.get(user=request.user)
-            user_mood_result = UserMoodResult.objects.filter(profile=user_profile, date=datetime.now().date()).first()
-            if (user_mood_result!=None):
+            user_mood_episode = PatientMoodEpisode.objects.filter(profile=user_profile, date=datetime.now().date()).first()
+            if (user_mood_episode!=None):
                 ischecked=True
             if ischecked:
                 return redirect("/postcheck") #if already check return to postcheck
