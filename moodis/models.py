@@ -87,12 +87,13 @@ class PatientResponse(models.Model):
 class PatientMoodEpisode(models.Model): 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     date = models.DateField(blank=True)
-    episode = models.CharField(max_length=50)
-
+    episode_score = models.FloatField()
+    episode_category = models.CharField(max_length=50)
     class Meta:
         verbose_name = 'Patient Mood Episode'
         verbose_name_plural = 'Patient Mood Episode'
 
+#extend from patient response
 class PatientMoodResponse(PatientResponse):
     patient_mood_episode = models.ForeignKey(PatientMoodEpisode, on_delete=models.CASCADE)
 

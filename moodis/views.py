@@ -7,6 +7,7 @@ from .forms import ContactForm, PatientCheckForm, PatientForm, PatientViewForm, 
 from django.contrib.auth.models import User
 from .models import Patient, PatientMoodResponse, PatientMoodEpisode, Profile, Question, ResponseOption
 from datetime import datetime
+from .moodis_fuzzy import getMoodEpisode
 
 def about(request):
     return render(request, 'pages/about.html', {})
@@ -59,7 +60,8 @@ def signup(request):
 
 @login_required
 def home(request):
-    return render(request, 'pages/home.html', {})
+    patient=Patient.objects.get(created_by=request.user.profile, is_self=True)
+    return render(request, 'pages/home.html', {'patient':patient})
 
 @login_required
 def patientEdit(request):
@@ -78,7 +80,7 @@ def patientEdit(request):
                 profile.age = patient.age 
                 profile.save()
             messages.success(request, "Informasi profil berhasil diperbaharui")
-            return redirect('precheck')
+            return redirect('patient_list')
         except Exception as e:
             print("Terjadi kesalahan. "+str(e))
             messages.error(request, "Terjadi kesalahan. "+str(e))
@@ -106,20 +108,20 @@ def patientAdd(request):
         try:
             patient.save()
             messages.success(request, "User berhasil ditambah")
-            return redirect('precheck')
+            return redirect('patient_list')
         except Exception as e:
             print("Terjadi kesalahan. "+str(e))
             messages.error(request, "Terjadi kesalahan. "+str(e))
-            return redirect('precheck')
+            return redirect('patient_list')
     else:
         return render(request, 'pages/patient_add.html', {'form': form})
 
 
 @login_required
-def precheck(request):
+def patientList(request):
     patient_self=Patient.objects.get(created_by=request.user.profile, is_self=True)
     patient_others=Patient.objects.filter(created_by=request.user.profile, is_self=False)
-    return render(request, 'pages/precheck.html', {'patient_self':patient_self, 'patient_others':patient_others})
+    return render(request, 'pages/patient_list.html', {'patient_self':patient_self, 'patient_others':patient_others})
 
 @login_required
 def check(request):
@@ -134,7 +136,8 @@ def check(request):
         patient_mood_episode=PatientMoodEpisode(
             date = date,
             patient=patient,
-            episode="MANIA",
+            episode_score=0,
+            episode_category="",
             )
         patient_mood_episode.save()
         
@@ -150,7 +153,13 @@ def check(request):
             patient_mood_response.save()
         
         #TODO add fuzzy process to update episode result based on patient answers
-        patient_mood_episode.episode="MANIA"
+        patient_mood_responses = PatientMoodResponse.objects.filter(patient_mood_episode=patient_mood_episode)
+        episode_score, episode_category = getMoodEpisode(patient_mood_responses)
+
+        #update mood episode
+        patient_mood_episode.episode_score=episode_score
+        patient_mood_episode.episode_category=episode_category
+        patient_mood_episode.save()
 
         patient_mood_episode_id = patient_mood_episode.id
         messages.success(request, "Submit kuesioner berhasil")
@@ -203,7 +212,7 @@ def patientDelete(request, patient_id):
             messages.success(request, "Data berhasil dihapus")
     except Exception as e:
         messages.error(request, "Terjadi kesalahan. Data gagal dihapus. "+str(e))
-    return redirect('precheck')
+    return redirect('patient_list')
 
 @login_required
 def patientMoodEpisodeDetail(request):

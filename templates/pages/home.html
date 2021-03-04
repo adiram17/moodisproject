@@ -15,7 +15,15 @@
               <div>
                 <p>Silakan ke klik tombol "Check Now" jika anda ingin memulai pengecekan awal episode
                   mood anda.</p>
-                <a href="/precheck" class="btn btn-primary btn-flat">Check Now!</a>
+                <a href="/check?patient_id={{patient.id}}" class="btn btn-primary btn-flat">Check Now!</a>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body login-card-body">
+              <div>
+                <p>Untuk melihat hasil pengecekan tiap episode.</p>
+                <a href="/patient_detail?patient_id={{patient.id}}" class="btn btn-primary btn-flat">View Report</a>
               </div>
             </div>
           </div>

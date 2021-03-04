@@ -54,6 +54,6 @@ class PatientMoodEpisodeAdmin(admin.ModelAdmin):
     def full_name(str, obj):
         return obj.patient.full_name
     
-    list_display = [ 'full_name', 'created_by', 'date' , 'episode']
+    list_display = [ 'full_name', 'created_by', 'date' , 'episode_score', 'episode_category']
 
 admin.site.register(PatientMoodEpisode, PatientMoodEpisodeAdmin)

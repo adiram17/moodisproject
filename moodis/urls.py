@@ -12,11 +12,11 @@ urlpatterns = [
     path('', views.home, name='home'),
     
     #mood check
-    path('precheck/', views.precheck, name='precheck'),
     path('check/', views.check, name='check'),
     path('postcheck/', views.postcheck, name='postcheck'),
     
     #patient
+    path('patient_list/', views.patientList, name='patient_list'),
     path('patient_edit/', views.patientEdit, name='patient_edit'),
     path('patient_add/', views.patientAdd, name='patient_add'),
     path('patient_detail/', views.patientDetail, name='patient_detail'),

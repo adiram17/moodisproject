@@ -1,0 +1,124 @@
+{%extends 'layout/app.html'%}
+{% load static %}
+
+{%block body%}
+<!-- Content Wrapper. Contains page content -->
+<div class="container">
+  <div class="">
+    <div class="text-center">
+      <h3 class="strong">Patient List</h3>
+    </div>
+    <div class="card">
+      <div class="card-header">
+          #1 Self Mood Check
+      </div>
+      <div class="card-body">
+          <table class="display compact" style="width:100%">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Gender</th>
+                      <th>Age</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>{{patient_self.full_name}}</td>
+                      <td>{{patient_self.gender}}</td>
+                      <td>{{patient_self.age}}</td>
+                      <td>
+                        <a class="btn btn-primary btn-flat" href="/check?patient_id={{patient_self.id}}">Check</a>
+                        <a class="btn btn-primary btn-flat" href="/patient_detail?patient_id={{patient_self.id}}">View Report</a>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+          #2 Other User Mood Check
+      </div>
+      <div class="card-body">
+          <table id="userList" class="display" style="width:100%">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Gender</th>
+                      <th>Age</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {%for patient_other in patient_others%}
+                  <tr>
+                      <td>{{patient_other.full_name}}</td>
+                      <td>{{patient_other.gender}}</td>
+                      <td>{{patient_other.age}}</td>
+                      <td>
+                        <a class="btn btn-primary btn-flat" href="/check?patient_id={{patient_other.id}}">Check</a>
+                        <a class="btn btn-primary btn-flat" href="/patient_detail?patient_id={{patient_other.id}}">View Report</a>
+                        
+                        <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#deletePatientConfirmation"
+                            data-id="{{ patient_other.id }}" data-full_name="{{ patient_other.full_name }}">
+                            Delete
+                            </button>
+                      </td>
+                  </tr>
+                  {%endfor%}
+              </tbody>
+          </table>
+          <a class="btn btn-primary btn-flat mb-2" href="/patient_add">Add User</a>
+      </div>
+    </div>
+    <div class="text-center">
+      <a class="btn btn-secondary btn-flat" href="/">Back to Home</a>
+     
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deletePatientConfirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Record?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="contentmodal" ></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-flat" data-dismiss="modal">Tidak</button>
+                <a type="button" class="btn btn-primary btn-flat" id="deletelinkmodal" href="">Ya</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{%endblock%}
+
+{% block javascript %}
+<script>
+  $('#userList').DataTable({
+  });
+  $('#deletePatientConfirmation').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var id = button.data('id') // Extract info from data-* attributes
+        var full_name = button.data('full_name') // Extract info from data-* attributes
+
+        var contentmodal = $(this)
+        contentmodal.find('.modal-body #contentmodal').text("Menghapus user akan menghapus seluruh catatan yang sudah dilakukan sebelumnya atas user tersebut. Hapus user '"+full_name+"'?")
+
+        var deletelinkmodal = document.getElementById('deletelinkmodal')
+        deletelinkmodal.href="/patient_delete/"+id
+
+    })
+</script>
+{% endblock %}
